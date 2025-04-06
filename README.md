@@ -1,5 +1,5 @@
 
-# Card Distribution Game
+# Card Distribution
 
 A simple card distribution game where users input the number of players, and the cards are distributed to them. The result is displayed in the specified format.
 
