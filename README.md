@@ -34,30 +34,16 @@ A simple card distribution game where users input the number of players, and the
 
 1. Go to the backend directory:
    ```bash
-   cd ..
    cd backend-card
    ```
 
 2. Start the PHP server:
    ```bash
-   php -S localhost:8000 -t public
+   php -S localhost:8000
    ```
 
    This will start the backend on `http://localhost:8000`.
 
-## Running the Application
-
-1. **Frontend**: Run the React app:
-   ```bash
-   npm start
-   ```
-   Open the app at `http://localhost:3000`.
-
-2. **Backend**: Run the PHP server:
-   ```bash
-   php -S localhost:8000 -t public
-   ```
-   The backend will be available at `http://localhost:8000`.
 
 Once both servers are running, open the frontend in your browser to start the game.
 
