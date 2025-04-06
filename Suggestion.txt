@@ -1,0 +1,70 @@
+Here are the improvements that i would suggest for the SQL to be a little bit faster
+
+1. Add Indexes
+    Add indexes on frequently used columns like Jobs.id, Jobs.job_category_id, and Jobs.job_type_id. 
+    This will help the database find the rows faster.
+
+    -- Add Indexes
+    CREATE INDEX idx_jobs_id ON jobs(id);
+    CREATE INDEX idx_jobs_job_category_id ON jobs(job_category_id);
+    CREATE INDEX idx_jobs_job_type_id ON jobs(job_type_id);
+    CREATE FULLTEXT INDEX idx_fulltext_jobs ON jobs(name, description, detail);
+
+2.  Use INNER JOIN Instead of LEFT JOIN Where applicable, but this might varies by situation.
+
+3.  Use the MATCH function for full-text searching on multiple columns, which is much faster than LIKE.
+
+    This original query
+    -----------------------------------------------
+    WHERE ((JobCategories.name LIKE '%キャビンアテンダント%'
+    OR JobTypes.name LIKE '%キャビンアテンダント%'
+    OR Jobs.name LIKE '%キャビンアテンダント%'
+    OR Jobs.description LIKE '%キャビンアテンダント%'
+    OR Jobs.detail LIKE '%キャビンアテンダント%'
+    OR Jobs.business_skill LIKE '%キャビンアテンダント%'
+    OR Jobs.knowledge LIKE '%キャビンアテンダント%'
+    OR Jobs.location LIKE '%キャビンアテンダント%'
+    OR Jobs.activity LIKE '%キャビンアテンダント%'
+    OR Jobs.salary_statistic_group LIKE '%キャビンアテンダント%'
+    OR Jobs.salary_range_remarks LIKE '%キャビンアテンダント%'
+    OR Jobs.restriction LIKE '%キャビンアテンダント%'
+    OR Jobs.remarks LIKE '%キャビンアテンダント%'
+    OR Personalities.name LIKE '%キャビンアテンダント%'
+    OR PracticalSkills.name LIKE '%キャビンアテンダント%'
+    OR BasicAbilities.name LIKE '%キャビンアテンダント%'
+    OR Tools.name LIKE '%キャビンアテンダント%'
+    OR CareerPaths.name LIKE '%キャビンアテンダント%'
+    OR RecQualifications.name LIKE '%キャビンアテンダント%'
+    OR ReqQualifications.name LIKE '%キャビンアテンダント%')
+    AND publish_status = 1
+    AND (Jobs.deleted) IS NULL)
+    ------------------------------------------
+
+    can be changed into using the MATCH function like this.
+
+    ------------------------------------------
+    WHERE MATCH(
+    JobCategories.name, 
+    JobTypes.name, 
+    Jobs.name, 
+    Jobs.description, 
+    Jobs.detail, 
+    Jobs.business_skill, 
+    Jobs.knowledge, 
+    Jobs.location, 
+    Jobs.activity, 
+    Jobs.salary_statistic_group, 
+    Jobs.salary_range_remarks, 
+    Jobs.restriction, 
+    Jobs.remarks, 
+    Personalities.name, 
+    PracticalSkills.name, 
+    BasicAbilities.name, 
+    Tools.name, 
+    CareerPaths.name, 
+    RecQualifications.name, 
+    ReqQualifications.name
+    ) AGAINST ('キャビンアテンダント' IN NATURAL LANGUAGE MODE)
+    AND Jobs.publish_status = 1
+    AND Jobs.deleted IS NULL;
+    ---------------------------------------
